@@ -1,10 +1,9 @@
-from sqlalchemy import Column, Integer, String, Boolean
-from app.database import Base
+from sqlalchemy import Column, String, Boolean
+from app.models.base import Base
 
 class User(Base):
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, index=True)
-    email = Column(String, unique=True, index=True)
-    hashed_password = Column(String)
-    is_active = Column(Boolean, default=True)
-    is_admin = Column(Boolean, default=False)
+    name = Column(String(255), nullable=False)
+    phone = Column(String(20), unique=True, nullable=False)
+    is_verified = Column(Boolean, default=False)
+    role = Column(String(50), nullable=False)
+    password = Column(String(255), nullable=False)
