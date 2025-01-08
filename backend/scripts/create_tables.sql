@@ -4,7 +4,18 @@ CREATE TABLE IF NOT EXISTS users (
     name VARCHAR(255) NOT NULL,
     phone VARCHAR(20) UNIQUE NOT NULL,
     is_verified BOOLEAN DEFAULT FALSE,
-    role VARCHAR(50) NOT NULL,
+    role VARCHAR(50) CHECK (role IN ('ADMIN', 'USER')) NOT NULL,
+    password VARCHAR(255) NOT NULL
+);
+
+-- Create employees table
+CREATE TABLE IF NOT EXISTS employees (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) UNIQUE NOT NULL,
+    is_verified BOOLEAN DEFAULT FALSE,
+    department_id INT REFERENCES departments(id),
+    role VARCHAR(50) CHECK (role IN ('ADMIN', 'EMPLOYEE')) NOT NULL,
     password VARCHAR(255) NOT NULL
 );
 
@@ -16,18 +27,30 @@ CREATE TABLE IF NOT EXISTS departments (
     phone VARCHAR(20)
 );
 
+-- Create task_types table
+CREATE TABLE IF NOT EXISTS task_types (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT
+);
+
+-- Create department_task_types table
+CREATE TABLE IF NOT EXISTS department_task_types (
+    id SERIAL PRIMARY KEY,
+    department_id INT REFERENCES departments(id),
+    task_type_id INT REFERENCES task_types(id)
+);
+
 -- Create issues table
 CREATE TABLE IF NOT EXISTS issue (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     description TEXT NOT NULL,
-    tags VARCHAR(255),
-    status VARCHAR(50) CHECK (status IN ('PENDING', 'IN PROGRESS', 'DONE')) DEFAULT 'PENDING',
-    is_public BOOLEAN DEFAULT TRUE,
+    is_completed BOOLEAN DEFAULT FALSE,
     longitude DECIMAL(9, 6),
     latitude DECIMAL(9, 6),
-    user_id INT REFERENCES users(id),
-    image VARCHAR(255)
+    author_id INT REFERENCES users(id),
+    image_url VARCHAR(255)
 );
 
 -- Create reports table
@@ -35,25 +58,31 @@ CREATE TABLE IF NOT EXISTS reports (
     id SERIAL PRIMARY KEY,
     issue_id INT REFERENCES issue(id),
     description TEXT,
-    image VARCHAR(255),
-    department_id INT REFERENCES departments(id),
-    user_id INT REFERENCES users(id)
+    image_url VARCHAR(255),
+    reported_by INT REFERENCES users(id),
+    reported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Create task_types table
-CREATE TABLE IF NOT EXISTS task_types (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    description TEXT,
-    department_id INT REFERENCES departments(id)
-);
-
--- Create tasks table
-CREATE TABLE IF NOT EXISTS tasks (
+-- Create volunteer_tasks table
+CREATE TABLE IF NOT EXISTS volunteer_tasks (
     id SERIAL PRIMARY KEY,
     issue_id INT REFERENCES issue(id),
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    status VARCHAR(50) CHECK (status IN ('PENDING', 'IN PROGRESS', 'DONE')) DEFAULT 'PENDING',
+    urgency VARCHAR(50) CHECK (urgency IN ('HIGH', 'MEDIUM', 'LOW')),
+    complexity VARCHAR(50) CHECK (complexity IN ('HIGH', 'MEDIUM', 'LOW'))
+);
+
+-- Create department_tasks table
+CREATE TABLE IF NOT EXISTS department_tasks (
+    id SERIAL PRIMARY KEY,
+    issue_id INT REFERENCES issue(id),
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
     task_type_id INT REFERENCES task_types(id),
+    status VARCHAR(50) CHECK (status IN ('PENDING', 'IN PROGRESS', 'DONE')) DEFAULT 'PENDING',
     urgency VARCHAR(50) CHECK (urgency IN ('HIGH', 'MEDIUM', 'LOW')),
     complexity VARCHAR(50) CHECK (complexity IN ('HIGH', 'MEDIUM', 'LOW')),
-    processed_at DATE
+    department_id INT REFERENCES departments(id)
 );
