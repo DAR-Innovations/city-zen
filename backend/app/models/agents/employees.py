@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from app.models.base import Base
 
-class Employee(Base):
+class Employees(Base):
     name = Column(String(255), nullable=False)
     phone = Column(String(20), unique=True, nullable=False)
     is_verified = Column(Boolean, default=False)

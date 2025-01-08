@@ -3,8 +3,8 @@ from sqlalchemy.orm import relationship
 from datetime import datetime
 from app.models.base import Base
 
-class Report(Base):
-    issue_id = Column(Integer, ForeignKey("issue.id"))
+class Reports(Base):
+    issue_id = Column(Integer, ForeignKey("issues.id"))
     description = Column(Text)
     image_url = Column(String(255))
     reported_by = Column(Integer, ForeignKey("users.id"))

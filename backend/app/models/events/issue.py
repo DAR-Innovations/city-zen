@@ -2,7 +2,7 @@ from sqlalchemy import Integer, Column, String, Text, Boolean, ForeignKey, DECIM
 from sqlalchemy.orm import relationship
 from app.models.base import Base
 
-class Issue(Base):
+class Issues(Base):
     name = Column(String(255), nullable=False)
     description = Column(Text, nullable=False)
     is_completed = Column(Boolean, default=False)
