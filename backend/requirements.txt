@@ -1,2 +1,29 @@
-fastapi[all]
-uvicorn
+# FastAPI framework
+fastapi
+
+# ASGI server
+uvicorn[standard]
+
+# Database ORM
+sqlalchemy
+psycopg2-binary
+
+# Pydantic for data validation
+pydantic
+
+# Authentication and security
+fastapi-jwt-auth
+python-multipart
+
+# File uploads
+aiofiles
+pillow
+
+# Optional for debugging
+python-dotenv
+
+# Additional AI/ML libraries (if needed later)
+torch       # For PyTorch-based models
+transformers  # For HuggingFace Transformers
+opencv-python-headless  # For OpenCV image processing
+scikit-learn  # For machine learning utilities
