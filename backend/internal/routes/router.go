@@ -2,6 +2,7 @@ package routes
 
 import (
 	"github.com/DAR-Innovations/city-zen/internal/modules/auth"
+	"github.com/DAR-Innovations/city-zen/internal/modules/images"
 	"github.com/gofiber/fiber/v3"
 )
 
@@ -11,4 +12,9 @@ func RegisterAuthRoutes(router fiber.Router, handler auth.AuthenticationHandler)
 	authRouter.Post("/user/signin", handler.UserSignIn)
 	/*auth.Post("/user/signup", handler.UserSignUp)
 	auth.Post("/employee/signin", handler.EmployeeSignIn)*/
+}
+
+func RegisterImagesRoutes(router fiber.Router) {
+	imagesRouter := router.Group("/images")
+	imagesRouter.Post("/upload", images.UploadImage)
 }

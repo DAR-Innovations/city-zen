@@ -2,15 +2,13 @@ package database
 
 import (
 	"fmt"
-	"github.com/DAR-Innovations/city-zen/internal/config"
-	"github.com/golang-migrate/migrate/v4"
-	postgresMigration "github.com/golang-migrate/migrate/v4/database/postgres"
+	"log"
+	"time"
+
+	"github.com/DAR-Innovations/city-zen/internal/data"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
-	"path/filepath"
-	"time"
 )
 
 type DBHandler struct {
@@ -23,7 +21,7 @@ func InitDB(dsn string) (*DBHandler, error) {
 		return nil, fmt.Errorf("failed to open database connection: %w", err)
 	}
 
-	if err := applyMigrations(db, "migrations"); err != nil {
+	if err := applyAutoMigrate(db); err != nil {
 		return nil, fmt.Errorf("failed to apply migrations: %w", err)
 	}
 
@@ -39,49 +37,28 @@ func InitDB(dsn string) (*DBHandler, error) {
 	return &DBHandler{DB: db}, nil
 }
 
-func applyMigrations(db *gorm.DB, migrationsPath string) error {
-	sqlDB, err := db.DB()
-	if err != nil {
-		return fmt.Errorf("failed to get SQL DB from gorm DB: %w", err)
+func applyAutoMigrate(db *gorm.DB) error {
+	log.Println("Starting AutoMigrate...")
+
+	models := []interface{}{
+		&data.Department{},
+		&data.User{},
+		&data.TaskType{},
+		&data.DepartmentTaskType{},
+		&data.Issue{},
+		&data.VolunteerTask{},
+		&data.DepartmentTask{},
+		&data.UserReport{},
+		&data.DepartmentReport{},
+		&data.Employee{},
 	}
 
-	driver, err := postgresMigration.WithInstance(sqlDB, &postgresMigration.Config{})
-	if err != nil {
-		return fmt.Errorf("failed to create migration driver: %w", err)
+	for _, model := range models {
+		if err := db.AutoMigrate(model); err != nil {
+			return fmt.Errorf("failed to migrate model %T: %w", model, err)
+		}
 	}
 
-	sourceURL := determineSourceURL(migrationsPath)
-
-	m, err := migrate.NewWithDatabaseInstance(
-		sourceURL,
-		"postgres",
-		driver,
-	)
-	if err != nil {
-		return fmt.Errorf("failed to initialize migrate instance: %w", err)
-	}
-
-	log.Println("Starting migrations...")
-	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-		return fmt.Errorf("migration error: %w", err)
-	}
-	log.Println("Migrations completed successfully.")
+	log.Println("AutoMigrate completed successfully.")
 	return nil
-}
-
-func determineSourceURL(migrationsPath string) string {
-	cfg := config.GetConfig()
-	absPath, err := filepath.Abs(migrationsPath)
-	if err != nil {
-		log.Fatalf("failed to get absolute path of migrations: %v", err)
-	}
-
-	absPath = filepath.ToSlash(absPath)
-
-	sourceURL := "file://" + absPath
-	if cfg.IsDebug {
-		sourceURL = "file://" + migrationsPath
-	}
-
-	return sourceURL
 }
