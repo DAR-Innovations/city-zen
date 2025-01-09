@@ -23,7 +23,7 @@ from app.models.agents.users import Users
 from app.models.tasks.task_types import TaskTypes
 from app.models.departments.department_task_types import DepartmentTaskTypes
 from app.models.events.issue import Issues
-from app.models.events.reports import Reports
+from app.models.events.reports import UserReports, DepartmentReports
 from app.models.tasks.volunteer_tasks import VolunteerTasks
 from app.models.tasks.department_tasks import DepartmentTasks
 

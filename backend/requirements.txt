@@ -10,9 +10,10 @@ psycopg2-binary
 
 # Pydantic for data validation
 pydantic
+pydantic-settings
 
 # Authentication and security
-fastapi-jwt-auth
+python-jose
 python-multipart
 
 # File uploads
@@ -27,3 +28,6 @@ torch       # For PyTorch-based models
 transformers  # For HuggingFace Transformers
 opencv-python-headless  # For OpenCV image processing
 scikit-learn  # For machine learning utilities
+
+passlib
+dnspython

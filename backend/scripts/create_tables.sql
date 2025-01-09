@@ -54,12 +54,21 @@ CREATE TABLE IF NOT EXISTS issue (
 );
 
 -- Create reports table
-CREATE TABLE IF NOT EXISTS reports (
+CREATE TABLE IF NOT EXISTS user_reports (
     id SERIAL PRIMARY KEY,
     issue_id INT REFERENCES issue(id),
     description TEXT,
     image_url VARCHAR(255),
     reported_by INT REFERENCES users(id),
+    reported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS department_reports (
+    id SERIAL PRIMARY KEY,
+    issue_id INT REFERENCES issue(id),
+    description TEXT,
+    image_url VARCHAR(255),
+    reported_by INT REFERENCES deparments(id),
     reported_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

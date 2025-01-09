@@ -4,7 +4,9 @@ from typing import Optional
 
 class Settings(BaseSettings):
     DATABASE_URL: str = Field(..., env="DATABASE_URL")
-    SECRET_KEY: str = Field(..., env="SECRET_KEY")
+    USER_SECRET_KEY: str = Field(..., env="USER_SECRET_KEY")
+    EMPLOYEE_SECRET_KEY: str = Field(..., env="EMPLOYEE_SECRET_KEY")
+
     ALGORITHM: str = Field(default="HS256", env="ALGORITHM")
     ACCESS_TOKEN_EXPIRE_MINUTES: int = Field(default=30, env="ACCESS_TOKEN_EXPIRE_MINUTES")
 
