@@ -4,9 +4,6 @@ from app.models.base import Base
 from app.router import api_router
 import uvicorn
 
-
-app = FastAPI()
-
 def init_db():
     """
     Initialize the database by creating all tables.
@@ -34,9 +31,9 @@ from app.models.tasks.department_tasks import DepartmentTasks
 async def lifespan(app: FastAPI):
     print("Starting the application...")
     print("Initializing the database...")
-    Base.metadata.create_all(bind=engine)  
+    Base.metadata.create_all(bind=engine)
     print("Database initialized successfully!")
-    yield  
+    yield
     print("Shutting down the application...")
 
 app = FastAPI(lifespan=lifespan)
