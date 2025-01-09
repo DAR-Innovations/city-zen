@@ -27,3 +27,5 @@ torch       # For PyTorch-based models
 transformers  # For HuggingFace Transformers
 opencv-python-headless  # For OpenCV image processing
 scikit-learn  # For machine learning utilities
+
+openai
