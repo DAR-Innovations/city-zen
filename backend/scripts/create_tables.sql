@@ -80,7 +80,8 @@ CREATE TABLE IF NOT EXISTS volunteer_tasks (
     description TEXT,
     status VARCHAR(50) CHECK (status IN ('PENDING', 'IN PROGRESS', 'DONE')) DEFAULT 'PENDING',
     urgency VARCHAR(50) CHECK (urgency IN ('HIGH', 'MEDIUM', 'LOW')),
-    complexity VARCHAR(50) CHECK (complexity IN ('HIGH', 'MEDIUM', 'LOW'))
+    complexity VARCHAR(50) CHECK (complexity IN ('HIGH', 'MEDIUM', 'LOW')),
+    volunteer_id INT REFERENCES volunteers(id) NULL
 );
 
 -- Create department_tasks table

@@ -8,3 +8,4 @@ class VolunteerTasks(Base):
     status = Column(String(50), nullable=False, default="PENDING")
     urgency = Column(String(50))
     complexity = Column(String(50))
+    volunteer_id = Column(Integer, ForeignKey("users.id"), nullable=True)

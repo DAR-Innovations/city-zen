@@ -71,9 +71,11 @@ class AuthService:
         self.db = db
 
     async def user_signin(self, dto: LoginRequest) -> LoginResponse:
+
         async with self.db as session:
             result = await session.execute(select(Users).filter(Users.phone == dto.phone))
             user = result.scalars().first()
+
             if not user or not verify_password(dto.password, user.hashed_password):
                 raise HTTPException(status_code=401, detail="Invalid user phone or password")
 

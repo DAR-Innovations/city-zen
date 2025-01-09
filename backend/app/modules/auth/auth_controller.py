@@ -1,19 +1,29 @@
 from fastapi import APIRouter, Depends, Response, HTTPException
+from app.core.config import settings
 
 from app.modules.auth.auth_service import AuthService
 from app.modules.auth.types.auth_dtos import LoginResponse, LoginRequest, RegisterRequest
 
 router = APIRouter()
-
-@router.post("/user/signin")
-async def user_signin(data: LoginRequest, service: AuthService = Depends(), response: Response = Depends()
-    ) -> LoginResponse:
+@router.post("/user/signin", response_model=LoginResponse)
+async def user_signin(
+    login_request: LoginRequest,
+    response: Response,
+    service: AuthService = Depends()
+):
     try:
-        login_response = await service.user_signin(data)
+        token = await service.user_signin(login_request)
 
-        response.set_cookie(key="ACCESS_TOKEN", value=login_response.access_token, httponly=True, secure=True)
+        response.set_cookie(
+            key="ACCESS_TOKEN",
+            value=token,
+            httponly=True,
+            secure=True,
+            max_age=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60,
+            expires=settings.ACCESS_TOKEN_EXPIRE_MINUTES * 60
+        )
 
-        return login_response
+        return LoginResponse(access_token=token)
 
     except HTTPException as e:
         raise e
