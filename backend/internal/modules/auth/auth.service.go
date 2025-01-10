@@ -71,8 +71,8 @@ func (s *authenticationService) CreateEmployee(departmentID uint, dto *types.Cre
 		IsVerified:   false,
 	}
 
-	if err := s.db.Create(employee); err != nil {
-		return 0, errors.New("invalid phone or password")
+	if err := s.db.Create(employee).Error; err != nil {
+		return 0, err
 	}
 
 	return employee.ID, nil
