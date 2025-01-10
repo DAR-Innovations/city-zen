@@ -1,15 +1,15 @@
 package issues
 
 import (
+	"io"
+	"strconv"
+
 	"github.com/DAR-Innovations/city-zen/internal/config"
 	"github.com/DAR-Innovations/city-zen/internal/middleware/contexts"
 	"github.com/DAR-Innovations/city-zen/internal/modules/images"
 	"github.com/DAR-Innovations/city-zen/internal/modules/issues/types"
 	"github.com/gofiber/fiber/v3"
-	"github.com/gofiber/fiber/v3/log"
 	"github.com/google/uuid"
-	"io"
-	"strconv"
 )
 
 type IssuesHandler struct {
@@ -23,7 +23,6 @@ func NewIssuesHandler(service IssuesService) *IssuesHandler {
 // CreateIssue creates a new issue
 func (h *IssuesHandler) CreateIssue(c fiber.Ctx) error {
 	var dto types.PostIssueRequestDTO
-	log.Info("aads")
 
 	if err := c.Bind().Form(&dto); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
@@ -31,16 +30,12 @@ func (h *IssuesHandler) CreateIssue(c fiber.Ctx) error {
 		})
 	}
 
-	log.Info("0")
-
 	image, err := c.FormFile("image")
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Image is required",
 		})
 	}
-
-	log.Info("0.5")
 
 	file, err := image.Open()
 	if err != nil {
@@ -60,8 +55,6 @@ func (h *IssuesHandler) CreateIssue(c fiber.Ctx) error {
 		uploadFolder = "./uploads"
 	}
 
-	log.Info("1")
-
 	filePath, _, err := images.SaveImageWithMetadata(fileName, content, uploadFolder)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -69,13 +62,14 @@ func (h *IssuesHandler) CreateIssue(c fiber.Ctx) error {
 		})
 	}
 
-	log.Info("2")
 	claims, err := contexts.GetUserClaimsFromCtx(c)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": "Failed to get user claims",
 		})
 	}
+
+	// TODO: add AI processing logic and automatic task creation
 
 	issueResponse, err := h.service.CreateIssue(claims.UserClaimsData.ID, &dto, filePath)
 	if err != nil {
