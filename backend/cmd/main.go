@@ -34,6 +34,7 @@ func main() {
 	if err := app.Listen(address); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
+
 }
 
 func InitializeDatabase(cfg *config.Config) *database.DBHandler {

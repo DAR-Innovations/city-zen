@@ -124,6 +124,7 @@ CREATE TABLE IF NOT EXISTS department_tasks (
     urgency VARCHAR(50) CHECK (urgency IN ('HIGH', 'MEDIUM', 'LOW')),
     complexity VARCHAR(50) CHECK (complexity IN ('HIGH', 'MEDIUM', 'LOW')),
     department_id INT REFERENCES departments(id),
+    assignee_id INT REFERENCES employees(id),
     created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
     deleted_at TIMESTAMPTZ
