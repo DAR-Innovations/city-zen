@@ -1,7 +1,6 @@
 from pydantic import BaseModel
 from typing import Optional
 
-
 class TaskMetadata(BaseModel):
     title: str
     description: str
