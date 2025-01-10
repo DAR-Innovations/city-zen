@@ -14,8 +14,13 @@
 
   <div class="mt-2 px-4">
     <section class="flex items-center gap-2">
-      <Input type="text" placeholder="Найти задачу" class="flex-grow px-4 rounded-full h-14" />
-      <Button size="icon" class="flex-shrink-0 rounded-full w-14 h-14">
+      <Input
+        v-model="searchText"
+        type="text"
+        placeholder="Search for tasks"
+        class="flex-grow px-4 rounded-full h-14"
+      />
+      <Button @click="onSearchClick" size="icon" class="flex-shrink-0 rounded-full w-14 h-14">
         <Search class="w-6 h-6" />
       </Button>
     </section>
@@ -31,7 +36,21 @@ import { Button } from '@/core/components/ui/button'
 import { Input } from '@/core/components/ui/input'
 import HomePublicTasks from '@/modules/landing/components/home-public-tasks.vue'
 import HomeUserIssues from '@/modules/landing/components/home-user-issues.vue'
-import { Bell, Search } from 'lucide-vue-next' /* PartiallyEnd: #3632/scriptSetup.vue */
+import {
+  Bell,
+  Search,
+} from 'lucide-vue-next' /* PartiallyEnd: #3632/scriptSetup.vue */ /* PartiallyEnd: #3632/scriptSetup.vue */
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const searchText = ref<string>('')
+
+const onSearchClick = () => {
+  if (!searchText.value || searchText.value.trim() === '') return
+  router.push({ path: '/public-tasks', query: { search: searchText.value.trim() } })
+}
 </script>
 
 <style scoped></style>
