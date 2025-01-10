@@ -12,6 +12,14 @@ type SignInRequestDTO struct {
 	Password string `json:"password" validate:"required,min=4"`
 }
 
+type CreateEmployeeRequestDTO struct {
+	FirstName string `json:"firstName" validate:"required"`
+	LastName  string `json:"lastName" validate:"required"`
+	Phone     string `json:"phone" validate:"required"`
+	Password  string `json:"password" validate:"required,min=4"`
+	Role      string `json:"role" validate:"required"`
+}
+
 type UserResponseDTO struct {
 	ID         int    `json:"id"`
 	Phone      string `json:"email"`

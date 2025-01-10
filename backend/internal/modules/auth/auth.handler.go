@@ -120,6 +120,46 @@ func (h *AuthenticationHandler) UserSignUp(c fiber.Ctx) error {
 	})
 }
 
+func (h *AuthenticationHandler) CreateEmployee(c fiber.Ctx) error {
+	var dto types.CreateEmployeeRequestDTO
+
+	if err := c.Bind().JSON(&dto); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Invalid request payload",
+		})
+	}
+
+	if err := h.validator.Struct(dto); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	claims, err := contexts.GetEmployeeClaimsFromCtx(c)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	if claims.Role != "ADMIN" {
+		return c.Status(fiber.StatusForbidden).JSON(fiber.Map{
+			"error": "You do not have permission to create employees",
+		})
+	}
+
+	id, err := h.service.CreateEmployee(claims.DepartmentID, &dto)
+	if err != nil {
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"id": id,
+	})
+}
+
 func (h *AuthenticationHandler) CurrentUser(c fiber.Ctx) error {
 
 	claims, err := contexts.GetUserClaimsFromCtx(c)

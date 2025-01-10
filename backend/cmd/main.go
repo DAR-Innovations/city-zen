@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/DAR-Innovations/city-zen/internal/modules/issues"
 	"log"
 
 	"github.com/DAR-Innovations/city-zen/internal/config"
@@ -26,6 +27,10 @@ func main() {
 	authService := auth.NewAuthenticationService(DBHandler.DB)
 	authHandler := auth.NewAuthenticationHandler(authService)
 
+	issuesService := issues.NewIssuesService(DBHandler.DB)
+	issuesHandler := issues.NewIssuesHandler(*issuesService)
+
+	routes.RegisterIssueRoutes(api, *authHandler)
 	routes.RegisterAuthRoutes(api, *authHandler)
 	routes.RegisterImagesRoutes(api)
 
