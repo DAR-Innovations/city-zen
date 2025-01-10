@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import LandingPage from './modules/landing/pages/landing-page.vue'
+import HomePage from './modules/landing/pages/home-page.vue'
 import { DEFAULT_TITLE, TITLE_TEMPLATE } from './core/constants/seo.constant'
 
 export const router = createRouter({
@@ -7,7 +7,7 @@ export const router = createRouter({
   scrollBehavior() {
     return { top: 0 }
   },
-  routes: [{ path: '/', component: LandingPage }],
+  routes: [{ path: '/', component: HomePage }],
 })
 
 router.beforeEach(async (to, _from, next) => {
