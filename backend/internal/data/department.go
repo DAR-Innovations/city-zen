@@ -2,7 +2,8 @@ package data
 
 type Employee struct {
 	BaseEntity
-	Name         string      `gorm:"size:255;not null"`
+	FirstName    string      `gorm:"size:255;not null"`
+	LastName     string      `gorm:"size:255;not null"`
 	Phone        string      `gorm:"size:20;unique;not null"`
 	IsVerified   bool        `gorm:"default:false"`
 	DepartmentID *uint       `gorm:"index"` // Nullable foreign key

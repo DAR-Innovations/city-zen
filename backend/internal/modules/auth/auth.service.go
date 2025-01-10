@@ -12,6 +12,7 @@ import (
 
 type AuthenticationService interface {
 	EmployeeSignIn(dto *types.SignInRequestDTO) (*types.SignInResponseDTO, error)
+	CreateEmployee(departmentID uint, dto *types.CreateEmployeeRequestDTO) (uint, error)
 	UserSignUp(input *types.UserSignUpRequestDTO) (uint, error)
 	UserSignIn(dto *types.SignInRequestDTO) (*types.SignInResponseDTO, error)
 }
@@ -44,10 +45,11 @@ func (s *authenticationService) EmployeeSignIn(dto *types.SignInRequestDTO) (*ty
 
 	token, err := types.GenerateEmployeeJWT(&types.EmployeeClaimsData{
 		ID:           employee.ID,
-		FirstName:    employee.Name,
-		LastName:     "",
+		FirstName:    employee.FirstName,
+		LastName:     employee.LastName,
 		Role:         employee.Role,
 		DepartmentID: *employee.DepartmentID,
+		IsVerified:   employee.IsVerified,
 	})
 	if err != nil {
 		return nil, err
@@ -57,6 +59,25 @@ func (s *authenticationService) EmployeeSignIn(dto *types.SignInRequestDTO) (*ty
 		AccessToken: token,
 	}, nil
 }
+
+func (s *authenticationService) CreateEmployee(departmentID uint, dto *types.CreateEmployeeRequestDTO) (uint, error) {
+	employee := &data.Employee{
+		DepartmentID: &departmentID,
+		FirstName:    dto.FirstName,
+		LastName:     dto.LastName,
+		Role:         dto.Role,
+		Phone:        dto.Phone,
+		Password:     dto.Password,
+		IsVerified:   false,
+	}
+
+	if err := s.db.Create(employee); err != nil {
+		return 0, errors.New("invalid phone or password")
+	}
+
+	return employee.ID, nil
+}
+
 func (s *authenticationService) UserSignUp(dto *types.UserSignUpRequestDTO) (uint, error) {
 	if err := utils.IsValidPassword(dto.Password); err != nil {
 		return 0, err
@@ -99,10 +120,11 @@ func (s *authenticationService) UserSignIn(dto *types.SignInRequestDTO) (*types.
 	}
 
 	token, err := types.GenerateCustomerJWT(&types.UserClaimsData{
-		ID:        user.ID,
-		FirstName: user.FirstName,
-		LastName:  user.LastName,
-		Role:      user.Role,
+		ID:         user.ID,
+		FirstName:  user.FirstName,
+		LastName:   user.LastName,
+		Role:       user.Role,
+		IsVerified: user.IsVerified,
 	})
 	if err != nil {
 		return nil, err

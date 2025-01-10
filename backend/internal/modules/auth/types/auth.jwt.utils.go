@@ -19,13 +19,15 @@ type EmployeeClaimsData struct {
 	LastName     string `json:"lastName"`
 	Role         string `json:"role"`
 	DepartmentID uint   `json:"departmentId"`
+	IsVerified   bool   `json:"isVerified"`
 }
 
 type UserClaimsData struct {
-	ID        uint   `json:"id"`
-	FirstName string `json:"firstName"`
-	LastName  string `json:"lastName"`
-	Role      string `json:"role"`
+	ID         uint   `json:"id"`
+	FirstName  string `json:"firstName"`
+	LastName   string `json:"lastName"`
+	Role       string `json:"role"`
+	IsVerified bool   `json:"isVerified"`
 }
 
 type EmployeeClaims struct {
