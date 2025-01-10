@@ -20,6 +20,8 @@ type VolunteerTask struct {
 	Description string `gorm:"type:text"`
 	Status      string `gorm:"size:50;default:'PENDING';check:status IN ('PENDING', 'IN PROGRESS', 'DONE')"`
 	Urgency     string `gorm:"size:50;check:urgency IN ('HIGH', 'MEDIUM', 'LOW')"`
+	VolunteerID string `gorm:"index;not null"`
+	User        User   `gorm:"foreignKey:VolunteerID"`
 	Complexity  string `gorm:"size:50;check:complexity IN ('HIGH', 'MEDIUM', 'LOW')"`
 }
 

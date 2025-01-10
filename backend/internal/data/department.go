@@ -2,13 +2,13 @@ package data
 
 type Employee struct {
 	BaseEntity
-	Name         string `gorm:"size:255;not null"`
-	Phone        string `gorm:"size:20;unique;not null"`
-	IsVerified   bool   `gorm:"default:false"`
-	DepartmentID *uint  `gorm:"index"` // Nullable foreign key
-	Department   *Department
-	Role         string `gorm:"size:50;not null;check:role IN ('ADMIN', 'EMPLOYEE')"`
-	Password     string `gorm:"size:255;not null"`
+	Name         string      `gorm:"size:255;not null"`
+	Phone        string      `gorm:"size:20;unique;not null"`
+	IsVerified   bool        `gorm:"default:false"`
+	DepartmentID *uint       `gorm:"index"` // Nullable foreign key
+	Department   *Department `gorm:"foreignKey:DepartmentID;OnDelete:SET NULL;"`
+	Role         string      `gorm:"size:50;not null;check:role IN ('ADMIN', 'EMPLOYEE')"`
+	Password     string      `gorm:"size:255;not null"`
 }
 
 type Department struct {

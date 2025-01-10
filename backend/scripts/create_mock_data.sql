@@ -10,14 +10,14 @@ INSERT INTO task_types (name, description, created_at, updated_at) VALUES
     ('Feature Request', 'Implement new features or improvements', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Users
-INSERT INTO users (name, phone, is_verified, role, password, created_at, updated_at) VALUES
-    ('John Doe', '1234567890', TRUE, 'admin', 'hashed_password_1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    ('Jane Smith', '0987654321', TRUE, 'user', 'hashed_password_2', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO users (first_name, last_name, phone, is_verified, role, password, created_at, updated_at) VALUES
+    ('John', 'Doe', '1234567890', TRUE, 'ADMIN', 'test1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('Jane', 'Smith', '0987654321', TRUE, 'USER', 'test1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Employees
-INSERT INTO employees (name, phone, is_verified, department_id, role, password, created_at, updated_at) VALUES
-    ('Alice Johnson', '1112223333', TRUE, 1, 'developer', 'hashed_password_3', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    ('Bob Brown', '4445556666', FALSE, 2, 'HR manager', 'hashed_password_4', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+INSERT INTO employees (first_name, last_name, phone, is_verified, department_id, role, password, created_at, updated_at) VALUES
+    ('Alice', 'Johnson', '1112223333', TRUE, 1, 'ADMIN', 'test1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('Bob', 'Brown', '4445556666', FALSE, 2, 'EMPLOYEE', 'test1', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
 -- Issues
 INSERT INTO issues (name, description, is_completed, longitude, latitude, author_id, image_url, created_at, updated_at) VALUES

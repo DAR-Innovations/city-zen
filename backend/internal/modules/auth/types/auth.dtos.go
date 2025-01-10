@@ -1,21 +1,34 @@
 package types
 
 type UserSignUpRequestDTO struct {
-	Phone    string `json:"phone" validate:"required"`
-	Password string `json:"password" validate:"required,min=8"`
-	Name     string `json:"name" validate:"required"`
+	Phone     string `json:"phone" validate:"required"`
+	Password  string `json:"password" validate:"required,min=4"`
+	FirstName string `json:"firstName" validate:"required"`
+	LastName  string `json:"lastName" validate:"required"`
 }
 
 type SignInRequestDTO struct {
 	Phone    string `json:"phone" validate:"required"`
-	Password string `json:"password" validate:"required,min=8"`
+	Password string `json:"password" validate:"required,min=4"`
 }
 
-type UserResponse struct {
+type UserResponseDTO struct {
 	ID         int    `json:"id"`
 	Phone      string `json:"email"`
-	Name       string `json:"name"`
+	FirstName  string `json:"firstName"`
+	LastName   string `json:"lastName"`
+	Role       string `json:"role"`
 	IsVerified bool   `json:"isVerified"`
+}
+
+type EmployeeResponseDTO struct {
+	ID           int    `json:"id"`
+	Phone        string `json:"email"`
+	FirstName    string `json:"firstName"`
+	LastName     string `json:"lastName"`
+	DepartmentID string `json:"departmentId"`
+	Role         string `json:"role"`
+	IsVerified   bool   `json:"isVerified"`
 }
 
 type SignInResponseDTO struct {

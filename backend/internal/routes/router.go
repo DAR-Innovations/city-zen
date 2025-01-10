@@ -1,17 +1,19 @@
 package routes
 
 import (
+	"github.com/DAR-Innovations/city-zen/internal/middleware"
 	"github.com/DAR-Innovations/city-zen/internal/modules/auth"
 	"github.com/DAR-Innovations/city-zen/internal/modules/images"
 	"github.com/gofiber/fiber/v3"
 )
 
 func RegisterAuthRoutes(router fiber.Router, handler auth.AuthenticationHandler) {
-	// User Reports
 	authRouter := router.Group("/auth")
 	authRouter.Post("/user/signin", handler.UserSignIn)
-	/*auth.Post("/user/signup", handler.UserSignUp)
-	auth.Post("/employee/signin", handler.EmployeeSignIn)*/
+	authRouter.Post("/user/signup", handler.UserSignUp)
+	authRouter.Get("/user/me", handler.CurrentUser, middleware.UserAuth())
+	authRouter.Post("/employee/signin", handler.EmployeeSignIn)
+	authRouter.Get("/employee/me", handler.CurrentEmployee, middleware.EmployeeAuth())
 }
 
 func RegisterImagesRoutes(router fiber.Router) {

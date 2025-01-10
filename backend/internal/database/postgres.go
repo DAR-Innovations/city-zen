@@ -21,9 +21,9 @@ func InitDB(dsn string) (*DBHandler, error) {
 		return nil, fmt.Errorf("failed to open database connection: %w", err)
 	}
 
-	if err := applyAutoMigrate(db); err != nil {
+	/*if err := applyMigrations(db, "migrations"); err != nil {
 		return nil, fmt.Errorf("failed to apply migrations: %w", err)
-	}
+	}*/
 
 	sqlDB, err := db.DB()
 	if err != nil {
