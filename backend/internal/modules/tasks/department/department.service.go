@@ -67,7 +67,7 @@ func (s *departmentService) GetTasks(filter types.TaskFilterDTO, page, limit int
 			DepartmentName: task.Department.Name,
 			Assignee: &types.AssigneeDTO{
 				ID:    task.Assignee.ID,
-				Name:  task.Assignee.Name,
+				Name:  task.Assignee.FirstName + task.Assignee.LastName,
 				Phone: task.Assignee.Phone,
 			},
 		}
