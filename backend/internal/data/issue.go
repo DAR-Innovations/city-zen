@@ -20,23 +20,24 @@ type VolunteerTask struct {
 	Description string `gorm:"type:text"`
 	Status      string `gorm:"size:50;default:'PENDING';check:status IN ('PENDING', 'IN PROGRESS', 'DONE')"`
 	Urgency     string `gorm:"size:50;check:urgency IN ('HIGH', 'MEDIUM', 'LOW')"`
+	Complexity  string `gorm:"size:50;check:complexity IN ('HIGH', 'MEDIUM', 'LOW')"`
 	VolunteerID uint   `gorm:"index;not null"`
 	Volunteer   User   `gorm:"foreignKey:VolunteerID"`
-	Complexity  string `gorm:"size:50;check:complexity IN ('HIGH', 'MEDIUM', 'LOW')"`
 }
 
 type DepartmentTask struct {
 	BaseEntity
-	IssueID     uint       `gorm:"index;not null"`
-	Issue       Issue      `gorm:"foreignKey:IssueID"`
-	Title       string     `gorm:"size:255;not null"`
-	Description string     `gorm:"type:text"`
-	TaskTypeID  uint       `gorm:"index;not null"`
-	TaskType    TaskType   `gorm:"foreignKey:TaskTypeID"`
-	Status      string     `gorm:"size:50;default:'PENDING';check:status IN ('PENDING', 'IN PROGRESS', 'DONE')"`
-	Urgency     string     `gorm:"size:50;check:urgency IN ('HIGH', 'MEDIUM', 'LOW')"`
-	Complexity  string     `gorm:"size:50;check:complexity IN ('HIGH', 'MEDIUM', 'LOW')"`
-	AssigneeID  *uint      `gorm:"index"`
-	Assignee    Employee   `gorm:"foreignKey:AssigneeID"`
-	Department  Department `gorm:"foreignKey:DepartmentID"`
+	IssueID      uint       `gorm:"index;not null"`
+	Issue        Issue      `gorm:"foreignKey:IssueID"`
+	Title        string     `gorm:"size:255;not null"`
+	Description  string     `gorm:"type:text"`
+	TaskTypeID   uint       `gorm:"index;not null"`
+	TaskType     TaskType   `gorm:"foreignKey:TaskTypeID"`
+	Status       string     `gorm:"size:50;default:'PENDING';check:status IN ('PENDING', 'IN PROGRESS', 'DONE')"`
+	Urgency      string     `gorm:"size:50;check:urgency IN ('HIGH', 'MEDIUM', 'LOW')"`
+	Complexity   string     `gorm:"size:50;check:complexity IN ('HIGH', 'MEDIUM', 'LOW')"`
+	AssigneeID   *uint      `gorm:"index"`
+	Assignee     Employee   `gorm:"foreignKey:AssigneeID"`
+	DepartmentID uint       `gorm:"index"`
+	Department   Department `gorm:"foreignKey:DepartmentID"`
 }
