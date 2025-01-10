@@ -20,7 +20,7 @@ func RegisterAuthRoutes(router fiber.Router, handler auth.AuthenticationHandler)
 
 func RegisterIssueRoutes(router fiber.Router, handler issues.IssuesHandler) {
 	issueRouter := router.Group("/issues")
-	issueRouter.Post("/", handler.CreateIssue)
+	issueRouter.Post("/", handler.CreateIssue, middleware.UserAuth())
 	issueRouter.Get("/my", handler.GetMyIssues, middleware.UserAuth())
 	issueRouter.Get("/:id", handler.GetIssueByID)
 }

@@ -22,6 +22,7 @@ func (s *IssuesService) CreateIssue(authorID uint, dto *types.PostIssueRequestDT
 		AuthorID:    authorID,
 		Name:        dto.Name,
 		Description: dto.Description,
+		IsCompleted: false,
 		Longitude:   dto.Longitude,
 		Latitude:    dto.Latitude,
 		ImageURL:    imagePath,
@@ -35,7 +36,7 @@ func (s *IssuesService) CreateIssue(authorID uint, dto *types.PostIssueRequestDT
 }
 
 // GetIssuesByAuthor retrieves all issues posted by a specific author
-func (s *IssuesService) GetIssuesByAuthor(authorID int) ([]types.IssueResponseDTO, error) {
+func (s *IssuesService) GetIssuesByAuthor(authorID uint) ([]types.IssueResponseDTO, error) {
 	var issues []data.Issue
 	if err := s.db.Where("author_id = ?", authorID).Find(&issues).Error; err != nil {
 		return nil, err
@@ -59,7 +60,7 @@ func (s *IssuesService) GetIssuesByAuthor(authorID int) ([]types.IssueResponseDT
 }
 
 // GetIssueByID retrieves a specific issue by its ID
-func (s *IssuesService) GetIssueByID(issueID string) (*types.IssueResponseDTO, error) {
+func (s *IssuesService) GetIssueByID(issueID uint) (*types.IssueResponseDTO, error) {
 	var issue data.Issue
 	if err := s.db.Where("id = ?", issueID).First(&issue).Error; err != nil {
 		return nil, errors.New("issue not found")

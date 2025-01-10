@@ -6,8 +6,10 @@ import (
 	"github.com/DAR-Innovations/city-zen/internal/modules/images"
 	"github.com/DAR-Innovations/city-zen/internal/modules/issues/types"
 	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/log"
 	"github.com/google/uuid"
 	"io"
+	"strconv"
 )
 
 type IssuesHandler struct {
@@ -21,21 +23,24 @@ func NewIssuesHandler(service IssuesService) *IssuesHandler {
 // CreateIssue creates a new issue
 func (h *IssuesHandler) CreateIssue(c fiber.Ctx) error {
 	var dto types.PostIssueRequestDTO
+	log.Info("aads")
 
-	// Bind the request form data to DTO
 	if err := c.Bind().Form(&dto); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Invalid request payload",
 		})
 	}
 
-	// Extract the image from the form data
+	log.Info("0")
+
 	image, err := c.FormFile("image")
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Image is required",
 		})
 	}
+
+	log.Info("0.5")
 
 	file, err := image.Open()
 	if err != nil {
@@ -55,7 +60,8 @@ func (h *IssuesHandler) CreateIssue(c fiber.Ctx) error {
 		uploadFolder = "./uploads"
 	}
 
-	// Save the image and extract metadata
+	log.Info("1")
+
 	filePath, _, err := images.SaveImageWithMetadata(fileName, content, uploadFolder)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -63,6 +69,7 @@ func (h *IssuesHandler) CreateIssue(c fiber.Ctx) error {
 		})
 	}
 
+	log.Info("2")
 	claims, err := contexts.GetUserClaimsFromCtx(c)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -70,7 +77,6 @@ func (h *IssuesHandler) CreateIssue(c fiber.Ctx) error {
 		})
 	}
 
-	// Call service to create issue
 	issueResponse, err := h.service.CreateIssue(claims.UserClaimsData.ID, &dto, filePath)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -83,9 +89,14 @@ func (h *IssuesHandler) CreateIssue(c fiber.Ctx) error {
 
 // GetMyIssues returns all issues for the current user
 func (h *IssuesHandler) GetMyIssues(c fiber.Ctx) error {
-	userID := c.Locals("user_id").(int)
+	claims, err := contexts.GetUserClaimsFromCtx(c)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Failed to get user claims",
+		})
+	}
 
-	issues, err := h.service.GetIssuesByAuthor(userID)
+	issues, err := h.service.GetIssuesByAuthor(claims.UserClaimsData.ID)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"error": err.Error(),
@@ -97,8 +108,8 @@ func (h *IssuesHandler) GetMyIssues(c fiber.Ctx) error {
 
 // GetIssueByID returns a specific issue by ID
 func (h *IssuesHandler) GetIssueByID(c fiber.Ctx) error {
-	issueID := c.Params("id")
-	issue, err := h.service.GetIssueByID(issueID)
+	issueID, err := strconv.ParseUint(c.Params("id"), 10, 64)
+	issue, err := h.service.GetIssueByID(uint(issueID))
 	if err != nil {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 			"error": "Issue not found",

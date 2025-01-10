@@ -30,7 +30,7 @@ func main() {
 	issuesService := issues.NewIssuesService(DBHandler.DB)
 	issuesHandler := issues.NewIssuesHandler(*issuesService)
 
-	routes.RegisterIssueRoutes(api, *authHandler)
+	routes.RegisterIssueRoutes(api, *issuesHandler)
 	routes.RegisterAuthRoutes(api, *authHandler)
 	routes.RegisterImagesRoutes(api)
 
